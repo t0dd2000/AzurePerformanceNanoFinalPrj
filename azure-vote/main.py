@@ -25,6 +25,9 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # Logging
 # TODO: Setup logger
 logger = logging.getLogger(__name__)
+logger.addHandler(AzureLogHandler(
+    connection_string='InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a')
+)
 
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
@@ -99,7 +102,7 @@ def index():
         logger.warning("processing POST method")
         if request.form['vote'] == 'reset':
             logger.warning("processing POST for reset")
-            logger.error("processing POST for reset using error log level instead of warning")
+
             # Empty table and return results
             r.set(button1,0)
             r.set(button2,0)
@@ -107,14 +110,13 @@ def index():
             properties = {'custom_dimensions': {'Cats Vote': vote1}}
 
             # TODO: use logger object to log cat vote
-            logger.warning("Cats Vote")
-            logger.error("Cats Vote using error level")
+            logger.warning("reset Cats Vote")
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
 
             # TODO: use logger object to log dog vote
-            logger.warning("Dogs Vote")
+            logger.warning("reset Dogs Vote")
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
@@ -126,11 +128,11 @@ def index():
 
             # Get current values
             vote1 = r.get(button1).decode('utf-8')
-            logger.warning("Cat Vote POST")
+            logger.warning("Cat Vote")
             tracer.span(name="Cat Vote")
 
             vote2 = r.get(button2).decode('utf-8')
-            logger.error("Dogs Vote POST")
+            logger.warning("Dogs Vote")
             tracer.span(name="Dog Vote")
 
             # Return results
