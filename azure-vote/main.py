@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(AzureLogHandler(
     connection_string='InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a')
 )
+logger.setLevel(logging.INFO)
 
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
@@ -52,21 +53,27 @@ middleware = FlaskMiddleware(
 
 # Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
-
+logger.info("read config_file.cfg completed")
 if ("VOTE1VALUE" in os.environ and os.environ['VOTE1VALUE']):
     button1 = os.environ['VOTE1VALUE']
 else:
     button1 = app.config['VOTE1VALUE']
+
+logger.info("button1=" + button1)
 
 if ("VOTE2VALUE" in os.environ and os.environ['VOTE2VALUE']):
     button2 = os.environ['VOTE2VALUE']
 else:
     button2 = app.config['VOTE2VALUE']
 
+logger.info("button2=" + button2)
+
 if ("TITLE" in os.environ and os.environ['TITLE']):
     title = os.environ['TITLE']
 else:
     title = app.config['TITLE']
+
+logger.info("title=" + title)
 
 # Redis Connection
 r = redis.Redis()
@@ -128,10 +135,12 @@ def index():
 
             # Get current values
             vote1 = r.get(button1).decode('utf-8')
+            logger.info("vote1=" + vote1)
             logger.warning("Cat Vote")
             tracer.span(name="Cat Vote")
 
             vote2 = r.get(button2).decode('utf-8')
+            logger.info("vote2=" + vote2)
             logger.warning("Dogs Vote")
             tracer.span(name="Dog Vote")
 
