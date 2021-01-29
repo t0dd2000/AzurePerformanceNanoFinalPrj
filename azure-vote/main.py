@@ -25,7 +25,7 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # Logging
 # TODO: Setup logger
 logger = logging.getLogger(__name__)
-logger.addHandler(AzureLogHandler(
+logger.addHandler(AzureEventHandler(
     connection_string='InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a')
 )
 logger.setLevel(logging.INFO)
@@ -41,6 +41,8 @@ tracer = Tracer (
         connection_string = 'InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a'),
         sampler = ProbabilitySampler(1.0),
 )
+tracer.span(name="Voted for Cats")
+tracer.span(name="Voted for Dogs")
 
 app = Flask(__name__)
 
@@ -59,21 +61,21 @@ if ("VOTE1VALUE" in os.environ and os.environ['VOTE1VALUE']):
 else:
     button1 = app.config['VOTE1VALUE']
 
-logger.info("button1=" + button1)
+logger.warning("button1=" + button1)
 
 if ("VOTE2VALUE" in os.environ and os.environ['VOTE2VALUE']):
     button2 = os.environ['VOTE2VALUE']
 else:
     button2 = app.config['VOTE2VALUE']
 
-logger.info("button2=" + button2)
+logger.warning("button2=" + button2)
 
 if ("TITLE" in os.environ and os.environ['TITLE']):
     title = os.environ['TITLE']
 else:
     title = app.config['TITLE']
 
-logger.info("title=" + title)
+logger.warning("title=" + title)
 
 # Redis Connection
 r = redis.Redis()
@@ -90,7 +92,7 @@ if not r.get(button2): r.set(button2,0)
 def index():
 
     if request.method == 'GET':
-
+        logger.warning("processing GET method")
         # Get current values
         vote1 = r.get(button1).decode('utf-8')
 
@@ -108,8 +110,6 @@ def index():
     elif request.method == 'POST':
         logger.warning("processing POST method")
         if request.form['vote'] == 'reset':
-            logger.warning("processing POST for reset")
-
             # Empty table and return results
             r.set(button1,0)
             r.set(button2,0)
@@ -117,13 +117,13 @@ def index():
             properties = {'custom_dimensions': {'Cats Vote': vote1}}
 
             # TODO: use logger object to log cat vote
-            logger.warning("reset Cats Vote")
+            logger.warning('cat action', extra=properties)
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
 
             # TODO: use logger object to log dog vote
-            logger.warning("reset Dogs Vote")
+            logger.warning('dog action', extra=properties)
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
@@ -135,14 +135,14 @@ def index():
 
             # Get current values
             vote1 = r.get(button1).decode('utf-8')
-            logger.info("vote1=" + vote1)
+            logger.warning("vote1=" + vote1)
             logger.warning("Cat Vote")
-            tracer.span(name="Cat Vote")
+            #tracer.span(name="Cat Vote")
 
             vote2 = r.get(button2).decode('utf-8')
-            logger.info("vote2=" + vote2)
+            logger.warning("vote2=" + vote2)
             logger.warning("Dogs Vote")
-            tracer.span(name="Dog Vote")
+            #tracer.span(name="Dog Vote")
 
             # Return results
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
