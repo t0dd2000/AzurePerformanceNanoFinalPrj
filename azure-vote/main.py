@@ -118,15 +118,15 @@ def index():
             properties = {'custom_dimensions': {'Cats Vote': vote1}}
 
             # TODO: use logger object to log cat vote
-            logger.warning('cat action', extra=properties)
-            logger.warning('cat action properties=', properties)
+            logger.error('cat action', extra=properties)
+            #logger.warning('cat action properties=', properties)
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
 
             # TODO: use logger object to log dog vote
-            logger.warning('dog action', extra=properties)
-            logger.warning('dog action properties=', properties)
+            logger.error('dog action', extra=properties)
+            #logger.warning('dog action properties=', properties)
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
