@@ -109,7 +109,7 @@ def index():
         return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
     elif request.method == 'POST':
-        logger.warning("processing POST method")
+        #logger.warning("processing POST method")
         if request.form['vote'] == 'reset':
             # Empty table and return results
             r.set(button1,0)
@@ -119,14 +119,14 @@ def index():
 
             # TODO: use logger object to log cat vote
             #logger.error('cat action', extra=properties)
-            logger.warning('Cats Vote')
+            #logger.warning('Cats Vote')
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
 
             # TODO: use logger object to log dog vote
             #logger.error('dog action', extra=properties)
-            logger.warning('Dogs Vote')
+            #logger.warning('Dogs Vote')
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
@@ -135,17 +135,18 @@ def index():
             # Insert vote result into DB
             vote = request.form['vote']
             r.incr(vote,1)
-            logger.warning('vote from form=' + vote)
+            logger.warning('Voted for ' + vote)
+            
 
             # Get current values
             vote1 = r.get(button1).decode('utf-8')
             #logger.warning("vote1=" + vote1)
-            logger.warning("Cat Vote Count=" + vote1)
+            #logger.warning("Cat Vote Count=" + vote1)
             #tracer.span(name="Cat Vote")
 
             vote2 = r.get(button2).decode('utf-8')
             #logger.warning("vote2=" + vote2)
-            logger.warning("Dogs Vote Count=" + vote2)
+            #logger.warning("Dogs Vote Count=" + vote2)
             #tracer.span(name="Dog Vote")
 
             # Return results
