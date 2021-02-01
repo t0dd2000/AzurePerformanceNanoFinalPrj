@@ -56,27 +56,27 @@ middleware = FlaskMiddleware(
 
 # Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
-logger.info("read config_file.cfg completed")
+#logger.info("read config_file.cfg completed")
 if ("VOTE1VALUE" in os.environ and os.environ['VOTE1VALUE']):
     button1 = os.environ['VOTE1VALUE']
 else:
     button1 = app.config['VOTE1VALUE']
 
-logger.warning("button1=" + button1)
+#logger.warning("button1=" + button1)
 
 if ("VOTE2VALUE" in os.environ and os.environ['VOTE2VALUE']):
     button2 = os.environ['VOTE2VALUE']
 else:
     button2 = app.config['VOTE2VALUE']
 
-logger.warning("button2=" + button2)
+#logger.warning("button2=" + button2)
 
 if ("TITLE" in os.environ and os.environ['TITLE']):
     title = os.environ['TITLE']
 else:
     title = app.config['TITLE']
 
-logger.warning("title=" + title)
+#logger.warning("title=" + title)
 
 # Redis Connection
 r = redis.Redis()
@@ -118,15 +118,15 @@ def index():
             properties = {'custom_dimensions': {'Cats Vote': vote1}}
 
             # TODO: use logger object to log cat vote
-            logger.error('cat action', extra=properties)
-            logger.warning('cat action properties=' + properties)
+            #logger.error('cat action', extra=properties)
+            logger.warning('Cats Vote')
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
 
             # TODO: use logger object to log dog vote
-            logger.error('dog action', extra=properties)
-            logger.warning('dog action properties=' + properties)
+            #logger.error('dog action', extra=properties)
+            logger.warning('Dogs Vote')
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
@@ -139,13 +139,13 @@ def index():
 
             # Get current values
             vote1 = r.get(button1).decode('utf-8')
-            logger.warning("vote1=" + vote1)
-            logger.warning("Cat Vote")
+            #logger.warning("vote1=" + vote1)
+            logger.warning("Cat Vote Count=" + vote1)
             #tracer.span(name="Cat Vote")
 
             vote2 = r.get(button2).decode('utf-8')
-            logger.warning("vote2=" + vote2)
-            logger.warning("Dogs Vote")
+            #logger.warning("vote2=" + vote2)
+            logger.warning("Dogs Vote Count=" + vote2)
             #tracer.span(name="Dog Vote")
 
             # Return results
