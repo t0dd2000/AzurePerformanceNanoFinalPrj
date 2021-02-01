@@ -119,14 +119,14 @@ def index():
 
             # TODO: use logger object to log cat vote
             logger.error('cat action', extra=properties)
-            #logger.warning('cat action properties=', properties)
+            logger.warning('cat action properties=' + properties)
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
 
             # TODO: use logger object to log dog vote
             logger.error('dog action', extra=properties)
-            #logger.warning('dog action properties=', properties)
+            logger.warning('dog action properties=' + properties)
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
@@ -135,7 +135,7 @@ def index():
             # Insert vote result into DB
             vote = request.form['vote']
             r.incr(vote,1)
-            logger.warning('vote from form=', vote)
+            logger.warning('vote from form=' + vote)
 
             # Get current values
             vote1 = r.get(button1).decode('utf-8')
