@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(AzureEventHandler(
     connection_string='InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a')
 )
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.WARNING)
 
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
@@ -42,8 +42,6 @@ tracer = Tracer (
         connection_string = 'InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a'),
         sampler = ProbabilitySampler(1.0),
 )
-tracer.span(name="Voted for Cats")
-tracer.span(name="Voted for Dogs")
 
 app = Flask(__name__)
 
@@ -93,7 +91,7 @@ if not r.get(button2): r.set(button2,0)
 def index():
 
     if request.method == 'GET':
-        logger.warning("processing GET method")
+        logging.warning("processing GET method")
         # Get current values
         vote1 = r.get(button1).decode('utf-8')
 
@@ -118,20 +116,20 @@ def index():
             properties = {'custom_dimensions': {'Cats Vote': vote1}}
 
             # TODO: use logger object to log cat vote
-            #logger.error('cat action', extra=properties)
+            logger.error('cat properties=', extra=properties)
             #logger.warning('Cats Vote')
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
 
             # TODO: use logger object to log dog vote
-            #logger.error('dog action', extra=properties)
+            logger.error('dog properties=', extra=properties)
             #logger.warning('Dogs Vote')
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
         else:
-            logger.warning("processing POST")
+            logging.warning("processing POST")
             # Insert vote result into DB
             vote = request.form['vote']
             r.incr(vote,1)
