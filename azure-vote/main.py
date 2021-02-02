@@ -26,7 +26,10 @@ from opencensus.ext.azure.log_exporter import AzureEventHandler
 # Logging
 # TODO: Setup logger
 logger = logging.getLogger(__name__)
-logger.addHandler(AzureEventHandler(
+#logger.addHandler(AzureEventHandler(
+#   connection_string='InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a')
+#)
+logger.addHandler(AzureLogHandler(
     connection_string='InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a')
 )
 logger.setLevel(logging.WARNING)
