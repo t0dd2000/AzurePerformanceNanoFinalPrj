@@ -137,7 +137,7 @@ def index():
             vote = request.form['vote']
             r.incr(vote,1)
             logger.warning('Voted for ' + vote)
-            if(vote=="Dogs"):
+            if vote=='Dogs':
                 logging.warnings("vote = Dogs - set span to Dogs")
                 tracer.span(name="Voted for Dogs")
             else:
