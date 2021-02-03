@@ -119,14 +119,14 @@ def index():
             properties = {'custom_dimensions': {'Cats Vote': vote1}}
 
             # TODO: use logger object to log cat vote
-            logger.error('cat properties=', extra=properties)
+            #logger.error('cat properties=', extra=properties)
             #logger.warning('Cats Vote')
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
 
             # TODO: use logger object to log dog vote
-            logger.error('dog properties=', extra=properties)
+            #logger.error('dog properties=', extra=properties)
             #logger.warning('Dogs Vote')
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
@@ -137,7 +137,7 @@ def index():
             vote = request.form['vote']
             r.incr(vote,1)
             logger.warning('Voted for ' + vote)
-            if vote=='Dogs':
+            if vote == 'Dogs':
                 logging.warnings("vote = Dogs - set span to Dogs")
                 tracer.span(name="Voted for Dogs")
             else:
