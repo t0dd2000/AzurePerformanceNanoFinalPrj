@@ -27,10 +27,10 @@ from opencensus.ext.azure.log_exporter import AzureEventHandler
 # TODO: Setup logger
 logger = logging.getLogger(__name__)
 loggerEvent = logging.getLogger(__name__)
-
 loggerEvent.addHandler(AzureEventHandler(
    connection_string='InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a')
 )
+loggerEvent.setLevel(logging.WARNING)
 
 logger.addHandler(AzureLogHandler(
     connection_string='InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a')
@@ -143,11 +143,11 @@ def index():
             logging.warning('logging Voted for ' + vote)
             if vote == 'Dogs':
                 logging.warning("logging vote=Dogs")
-                #loggerEvent.warnings("Event-Voted for Dogs")
+                loggerEvent.warnings("Event-Voted for Dogs")
                 #tracer.span(name="Voted for Dogs")
             else:
                 logging.warning("logging vote=Cats")
-                #loggerEvent.warnings("Event-Voted for Cats")
+                loggerEvent.warnings("Event-Voted for Cats")
                 #tracer.span(name="Voted for Cats")
 
             # Get current values
