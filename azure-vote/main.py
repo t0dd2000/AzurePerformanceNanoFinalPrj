@@ -102,12 +102,12 @@ def index():
         vote1 = r.get(button1).decode('utf-8')
 
         # TODO: use tracer object to trace cat vote
-        tracer.span(name="Cat Vote")
+        tracer.span(name="Span Cat Vote")
 
         vote2 = r.get(button2).decode('utf-8')
 
         # TODO: use tracer object to trace dog vote
-        tracer.span(name="Dog Vote")
+        tracer.span(name="Span Dog Vote")
 
         # Return index with values
         return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
@@ -123,15 +123,15 @@ def index():
             properties = {'custom_dimensions': {'Cats Vote': vote1}}
 
             # TODO: use logger object to log cat vote
-            #logger.error('cat properties=', extra=properties)
-            #logger.warning('Cats Vote')
+            logger.warning('cat properties=', extra=properties)
+            logger.warning('vote is reset - Cats Vote')
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
 
             # TODO: use logger object to log dog vote
-            #logger.error('dog properties=', extra=properties)
-            #logger.warning('Dogs Vote')
+            logger.warning('dog properties=', extra=properties)
+            logger.warning('vote is reset - Dogs Vote')
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
@@ -142,11 +142,11 @@ def index():
             r.incr(vote,1)
             logging.warning('logging Voted for ' + vote)
             if vote == 'Dogs':
-                logging.warning("logging vote=Dogs")
+                logger.warning("logging vote=Dogs")
                 #loggerEvent.warnings("Event-Voted for Dogs")
                 tracer.span(name="Voted for Dogs")
             else:
-                logging.warning("logging vote=Cats")
+                logger.warning("logging vote=Cats")
                 #loggerEvent.warnings("Event-Voted for Cats")
                 tracer.span(name="Voted for Cats")
 
