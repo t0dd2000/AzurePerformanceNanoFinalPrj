@@ -26,9 +26,12 @@ from opencensus.ext.azure.log_exporter import AzureEventHandler
 # Logging
 # TODO: Setup logger
 logger = logging.getLogger(__name__)
-#logger.addHandler(AzureEventHandler(
-#   connection_string='InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a')
-#)
+loggerEvent = logging.getLogger(__name__)
+
+loggerEvent.addHandler(AzureEventHandler(
+   connection_string='InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a')
+)
+
 logger.addHandler(AzureLogHandler(
     connection_string='InstrumentationKey=705f49e9-1faf-4461-9467-b0ed5e0bd64a')
 )
@@ -94,7 +97,7 @@ if not r.get(button2): r.set(button2,0)
 def index():
 
     if request.method == 'GET':
-        logging.warning("processing GET method")
+        logging.warning("logging processing GET method")
         # Get current values
         vote1 = r.get(button1).decode('utf-8')
 
@@ -110,8 +113,9 @@ def index():
         return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
     elif request.method == 'POST':
-        #logger.warning("processing POST method")
+        logging.warning("logging processing POST method")
         if request.form['vote'] == 'reset':
+            logging.warning("logging in POSt req form is [reset]")
             # Empty table and return results
             r.set(button1,0)
             r.set(button2,0)
@@ -132,17 +136,19 @@ def index():
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
         else:
-            logging.warning("processing POST")
+            logging.warning("logging processing POST")
             # Insert vote result into DB
             vote = request.form['vote']
             r.incr(vote,1)
-            logger.warning('Voted for ' + vote)
-            #if vote == 'Dogs':
-            #    logging.warnings("vote = Dogs - set span to Dogs")
-            #    tracer.span(name="Voted for Dogs")
-            #else:
-            #    logging.warnings("vote = Cats - set span to Cats")
-            #    tracer.span(name="Voted for Cats")
+            logging.warning('logging Voted for ' + vote)
+            if vote == 'Dogs':
+                logging.warning("logging vote=Dogs")
+                loggerEvent.warnings("Event-Voted for Dogs")
+                #tracer.span(name="Voted for Dogs")
+            else:
+                logging.warning("logging vote=Cats")
+                loggerEvent.warnings("Event-Voted for Cats")
+                #tracer.span(name="Voted for Cats")
 
             # Get current values
             vote1 = r.get(button1).decode('utf-8')
