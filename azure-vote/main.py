@@ -142,24 +142,16 @@ def index():
             r.incr(vote,1)
             logging.warning('logging Voted for ' + vote)
             if vote == 'Dogs':
-                logger.warning("logging vote=Dogs")
-                #loggerEvent.warnings("Event-Voted for Dogs")
-                tracer.span(name="Voted for Dogs")
+                logger.warning("Voted for Dogs")
+                #tracer.span(name="Voted for Dogs")
             else:
-                logger.warning("logging vote=Cats")
-                #loggerEvent.warnings("Event-Voted for Cats")
-                tracer.span(name="Voted for Cats")
+                logger.warning("Voted for Cats")
+                #tracer.span(name="Voted for Cats")
 
             # Get current values
             vote1 = r.get(button1).decode('utf-8')
-            #logger.warning("vote1=" + vote1)
-            #logger.warning("Cat Vote Count=" + vote1)
-            #tracer.span(name="Cat Vote")
 
             vote2 = r.get(button2).decode('utf-8')
-            #logger.warning("vote2=" + vote2)
-            #logger.warning("Dogs Vote Count=" + vote2)
-            #tracer.span(name="Dog Vote")
 
             # Return results
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
