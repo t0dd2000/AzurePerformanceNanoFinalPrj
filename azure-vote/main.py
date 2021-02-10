@@ -143,7 +143,7 @@ def index():
             logging.warning('logging Voted for ' + vote)
             if vote == 'Dogs':
                 logger.warning("Voted for Dogs")
-                #tracer.span(name="Voted for Dogs")
+                ##tracer.span(name="Voted for Dogs")
             else:
                 logger.warning("Voted for Cats")
                 #tracer.span(name="Voted for Cats")
